@@ -8,12 +8,16 @@ gulp.task('webserver', function(){
 		.pipe(webserver());
 });
 
-gulp.task('react', function(){
-	gulp.src('assets/steepless.jsx')
-		.pipe(watch(function(files){
-			files.pipe(react())
-				.pipe(gulp.dest('assets'));
-		}));
+gulp.task('watch', function(){
+	watch('assets/steepless.jsx')
+		.pipe(react())
+		.pipe(gulp.dest('assets'));
 });
 
-gulp.task('default', ['webserver', 'react']);
+gulp.task('react', function(){
+	gulp.src('assets/steepless.jsx')
+		.pipe(react())
+		.pipe(gulp.dest('assets'));
+});
+
+gulp.task('default', ['webserver', 'react', 'watch']);

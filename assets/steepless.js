@@ -1,4 +1,3 @@
-/** @jsx React.DOM */
 var Steepless = {
 	directionsService: new google.maps.DirectionsService(),
 	directionsRenderer: new google.maps.DirectionsRenderer(),
@@ -176,14 +175,14 @@ var App = React.createClass({displayName: 'App',
 		};
 		var travelMode = this.state.travelMode;
 		return (
-			React.DOM.div(null, 
-				Map(null), 
-				React.DOM.div({id: "sidebar"}, 
-					React.DOM.header(null, 
-						React.DOM.h1(null, Icon({type: "mountains", width: "24", height: "24"}), " Steepless")
+			React.createElement("div", null, 
+				React.createElement(Map, null), 
+				React.createElement("div", {id: "sidebar"}, 
+					React.createElement("header", null, 
+						React.createElement("h1", null, React.createElement(Icon, {type: "mountains", width: "24", height: "24"}), " Steepless")
 					), 
-					RouteForm({start: this.state.start, end: this.state.end, units: units, travelMode: travelMode, onUnitChange: this.handleUnitChange, onTravelModeChange: this.handleTravelModeChange}), 
-					RouteList({data: this.state.routes, travelMode: travelMode, units: units, onRouteClick: this.handleRouteClick})
+					React.createElement(RouteForm, {start: this.state.start, end: this.state.end, units: units, travelMode: travelMode, onUnitChange: this.handleUnitChange, onTravelModeChange: this.handleTravelModeChange}), 
+					React.createElement(RouteList, {data: this.state.routes, travelMode: travelMode, units: units, onRouteClick: this.handleRouteClick})
 				)
 			)
 		);
@@ -195,7 +194,7 @@ var Icon = React.createClass({displayName: 'Icon',
 		var type = this.props.type;
 		var title = this.props.title;
 		return (
-			React.DOM.svg({title: title, className: "icon", dangerouslySetInnerHTML: {__html: '<use xlink:href="assets/icons.svg#icon-' + type + '"></use>'}, width: this.props.width, height: this.props.height})
+			React.createElement("svg", {title: title, className: "icon", dangerouslySetInnerHTML: {__html: '<use xlink:href="assets/icons.svg#icon-' + type + '"></use>'}, width: this.props.width, height: this.props.height})
 		);
 	}
 });
@@ -233,7 +232,7 @@ var Map = React.createClass({displayName: 'Map',
 	},
 	render: function(){
 		return (
-			React.DOM.div({id: "map-canvas"})
+			React.createElement("div", {id: "map-canvas"})
 		);
 	}
 });
@@ -260,13 +259,13 @@ var Chart = React.createClass({displayName: 'Chart',
 				};
 				var key = i + '-' + d.value;
 				return (
-					React.DOM.div({style: style, key: key, onMouseEnter: self.handleBarMouseEnter.bind(self, i), onMouseLeave: self.handleBarMouseLeave}, React.DOM.span(null, d.title))
+					React.createElement("div", {style: style, key: key, onMouseEnter: self.handleBarMouseEnter.bind(self, i), onMouseLeave: self.handleBarMouseLeave}, React.createElement("span", null, d.title))
 				);
 			});
 			chartStyle.height = props.height; // then grow the height, CSS transition applied here
 		}
 		return (
-			React.DOM.div({className: "chart", style: chartStyle}, 
+			React.createElement("div", {className: "chart", style: chartStyle}, 
 				bars
 			)
 		)
@@ -331,41 +330,41 @@ var RouteForm = React.createClass({displayName: 'RouteForm',
 	render: function(){
 		var units = this.props.units;
 		return (
-			React.DOM.form({id: "directions-form", onSubmit: this.handleSubmit}, 
-				React.DOM.div({className: "field-section"}, 
-					React.DOM.label(null, 
-						React.DOM.select({ref: "travelMode", onChange: this.handleTravelModeChange}, 
-							React.DOM.option({value: "walking"}, "Walking"), 
-							React.DOM.option({value: "bicycling"}, "Bicycling"), 
-							React.DOM.option({value: "driving"}, "Driving")
+			React.createElement("form", {id: "directions-form", onSubmit: this.handleSubmit}, 
+				React.createElement("div", {className: "field-section"}, 
+					React.createElement("label", null, 
+						React.createElement("select", {ref: "travelMode", onChange: this.handleTravelModeChange}, 
+							React.createElement("option", {value: "walking"}, "Walking"), 
+							React.createElement("option", {value: "bicycling"}, "Bicycling"), 
+							React.createElement("option", {value: "driving"}, "Driving")
 						), " from"
 					), 
-					React.DOM.input({ref: "start", id: "directions-start", placeholder: "Start", required: true})
+					React.createElement("input", {ref: "start", id: "directions-start", placeholder: "Start", required: true})
 				), 
-				React.DOM.a({href: "#", id: "flip-direction", onClick: this.handleFlip, title: "Flip origin and destination", tabIndex: "-1"}, Icon({type: "arrow-right", width: "14", height: "14"})), 
-				React.DOM.div({className: "field-section"}, 
-					React.DOM.label({htmlFor: "directions-end"}, "To"), 
-					React.DOM.input({ref: "end", id: "directions-end", placeholder: "Destination", required: true})
+				React.createElement("a", {href: "#", id: "flip-direction", onClick: this.handleFlip, title: "Flip origin and destination", tabIndex: "-1"}, React.createElement(Icon, {type: "arrow-right", width: "14", height: "14"})), 
+				React.createElement("div", {className: "field-section"}, 
+					React.createElement("label", {htmlFor: "directions-end"}, "To"), 
+					React.createElement("input", {ref: "end", id: "directions-end", placeholder: "Destination", required: true})
 				), 
-				React.DOM.div({className: "form-footer"}, 
-					React.DOM.div({className: "options"}, 
-						Icon({type: "widget", width: "20", height: "20", title: "Settings"}), 
-						React.DOM.span(null, 
-							React.DOM.label(null, "Distance ", 
-								React.DOM.select({ref: "distanceSelect", value: units.distance, onChange: this.handleDistanceChange}, 
-									React.DOM.option({value: "km"}, "km"), 
-									React.DOM.option({value: "miles"}, "miles")
+				React.createElement("div", {className: "form-footer"}, 
+					React.createElement("div", {className: "options"}, 
+						React.createElement(Icon, {type: "widget", width: "20", height: "20", title: "Settings"}), 
+						React.createElement("span", null, 
+							React.createElement("label", null, "Distance ", 
+								React.createElement("select", {ref: "distanceSelect", value: units.distance, onChange: this.handleDistanceChange}, 
+									React.createElement("option", {value: "km"}, "km"), 
+									React.createElement("option", {value: "miles"}, "miles")
 								)
 							), " ", 
-							React.DOM.label(null, "Height ", 
-								React.DOM.select({ref: "heightSelect", value: units.height, onChange: this.handleHeightChange}, 
-									React.DOM.option({value: "m"}, "m"), 
-									React.DOM.option({value: "ft"}, "ft")
+							React.createElement("label", null, "Height ", 
+								React.createElement("select", {ref: "heightSelect", value: units.height, onChange: this.handleHeightChange}, 
+									React.createElement("option", {value: "m"}, "m"), 
+									React.createElement("option", {value: "ft"}, "ft")
 								)
 							)
 						)
 					), 
-					React.DOM.button(null, "Go")
+					React.createElement("button", null, "Go")
 				)
 			)
 		);
@@ -386,29 +385,29 @@ var RouteList = React.createClass({displayName: 'RouteList',
 			var routes = this.props.data.map(function(d, i){
 				var key = i + '' + d.route.bounds.toString();
 				return (
-					React.DOM.li({key: key, className: d.selected ? 'selected' : '', onClick: self.handleClick.bind(self, i)}, 
-						Route({data: d, units: self.props.units, travelMode: self.props.travelMode, onSetPinpoint: self.handlePinpoint})
+					React.createElement("li", {key: key, className: d.selected ? 'selected' : '', onClick: self.handleClick.bind(self, i)}, 
+						React.createElement(Route, {data: d, units: self.props.units, travelMode: self.props.travelMode, onSetPinpoint: self.handlePinpoint})
 					)
 				);
 			})
 			return (
-				React.DOM.div({id: "routes-container"}, 
-					React.DOM.ul({id: "routes-list"}, 
+				React.createElement("div", {id: "routes-container"}, 
+					React.createElement("ul", {id: "routes-list"}, 
 						routes
 					)
 				)
 			);
 		} else if (!!data){
 			return (
-				React.DOM.div({id: "routes-container"}, 
-					React.DOM.p(null, "Oops, there are no routes found.")
+				React.createElement("div", {id: "routes-container"}, 
+					React.createElement("p", null, "Oops, there are no routes found.")
 				)
 			);
 		} else {
 			return (
-				React.DOM.div({id: "routes-container"}, 
-					React.DOM.p(null, "Begin by entering the Start and Destination locations above."), 
-					React.DOM.p(null, "Try an example: ", React.DOM.a({href: "#walking/Chinatown, SF/Twin Peaks, SF"}, "Walking from Chinatown to Twin Peaks"))
+				React.createElement("div", {id: "routes-container"}, 
+					React.createElement("p", null, "Begin by entering the Start and Destination locations above."), 
+					React.createElement("p", null, "Try an example: ", React.createElement("a", {href: "#walking/Chinatown, SF/Twin Peaks, SF"}, "Walking from Chinatown to Twin Peaks"))
 				)
 			)
 		}
@@ -453,8 +452,8 @@ var Route = React.createClass({displayName: 'Route',
 		var distanceUnit = units.distance;
 		var distanceVal = leg.distance.value;
 		var distance = (distanceUnit == 'km' ? distanceVal/1000 : distanceVal*0.000621371).toFixed(2) + ' ' + distanceUnit;
-		var riseStat = rise ? React.DOM.span(null, Icon({type: "arrow-graph-up-right", width: "14", height: "14", title: "Rise"}), " ", rise) : '';
-		var dropStat = drop ? React.DOM.span(null, Icon({type: "arrow-graph-down-right", width: "14", height: "14", title: "Drop"}), " ", drop) : '';
+		var riseStat = rise ? React.createElement("span", null, React.createElement(Icon, {type: "arrow-graph-up-right", width: "14", height: "14", title: "Rise"}), " ", rise) : '';
+		var dropStat = drop ? React.createElement("span", null, React.createElement(Icon, {type: "arrow-graph-down-right", width: "14", height: "14", title: "Drop"}), " ", drop) : '';
 
 		var elevations = data.elevations ? data.elevations.map(function(d){
 			var elevation = d.elevation;
@@ -465,19 +464,19 @@ var Route = React.createClass({displayName: 'Route',
 		}) : null;
 
 		return (
-			React.DOM.a(null, 
-				React.DOM.div({className: "heading"}, 
-					Icon({type: iconType, width: "24", height: "24", title: iconType}), " via ", route.summary
+			React.createElement("a", null, 
+				React.createElement("div", {className: "heading"}, 
+					React.createElement(Icon, {type: iconType, width: "24", height: "24", title: iconType}), " via ", route.summary
 				), 
-				Chart({data: elevations, domain: domain, width: width, height: height, onBarMouseEnter: this.handleBarHover, onBarMouseLeave: this.handleBarHover}), 
-				React.DOM.div({className: "stats"}, riseStat, "   ", dropStat), 
-				React.DOM.div({className: "metadata"}, leg.duration.text, "   ", distance)
+				React.createElement(Chart, {data: elevations, domain: domain, width: width, height: height, onBarMouseEnter: this.handleBarHover, onBarMouseLeave: this.handleBarHover}), 
+				React.createElement("div", {className: "stats"}, riseStat, "   ", dropStat), 
+				React.createElement("div", {className: "metadata"}, leg.duration.text, "   ", distance)
 			)
 		);
 	}
 });
 
 React.renderComponent(
-	App(null),
+	React.createElement(App, null),
 	document.getElementById('app')
 );

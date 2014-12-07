@@ -3,10 +3,10 @@
   "version": "0.0.1",
   "description": "Find the flattest routes and avoid the hilliest routes",
   "devDependencies": {
-    "gulp": "^3.8.6",
-    "gulp-react": "^0.5.0",
-    "gulp-watch": "^0.6.8",
-    "gulp-webserver": "^0.4.0"
+    "gulp": "~3.8.10",
+    "gulp-react": "~2.0.0",
+    "gulp-watch": "~3.0.0",
+    "gulp-webserver": "~0.8.8"
   },
   "author": "Lim Chee Aun",
   "license": "MIT"
