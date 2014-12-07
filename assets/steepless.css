@@ -9,6 +9,13 @@ input, button, select{
 	font-family: RobotoDraft, Helvetica Neue, Helvetica, Arial, sans-serif;
 	font-size: 1em;
 }
+a{
+	color: #2196f3;
+	text-decoration: none;
+}
+a:hover{
+	color: #1565c0;
+}
 .icon{
 	fill: currentColor;
 }
