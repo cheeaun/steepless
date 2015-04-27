@@ -9,7 +9,7 @@ var Steepless = {
 	chartBarWidth: 2
 };
 
-var App = React.createClass({displayName: 'App',
+var App = React.createClass({displayName: "App",
 	getInitialState: function(){
 		return {
 			start: '',
@@ -189,7 +189,7 @@ var App = React.createClass({displayName: 'App',
 	}
 });
 
-var Icon = React.createClass({displayName: 'Icon',
+var Icon = React.createClass({displayName: "Icon",
 	render: function(){
 		var type = this.props.type;
 		var title = this.props.title;
@@ -199,7 +199,7 @@ var Icon = React.createClass({displayName: 'Icon',
 	}
 });
 
-var Map = React.createClass({displayName: 'Map',
+var Map = React.createClass({displayName: "Map",
 	getDefaultProps: function(){
 		return {
 			map: {
@@ -237,7 +237,7 @@ var Map = React.createClass({displayName: 'Map',
 	}
 });
 
-var Chart = React.createClass({displayName: 'Chart',
+var Chart = React.createClass({displayName: "Chart",
 	handleBarMouseEnter: function(index){
 		this.props.onBarMouseEnter(index);
 	},
@@ -272,7 +272,7 @@ var Chart = React.createClass({displayName: 'Chart',
 	}
 });
 
-var RouteForm = React.createClass({displayName: 'RouteForm',
+var RouteForm = React.createClass({displayName: "RouteForm",
 	updateLocationHash: function(travelMode, start, end){
 		if (!travelMode) travelMode = this.props.travelMode;
 		if (!start) start = this.props.start;
@@ -371,7 +371,7 @@ var RouteForm = React.createClass({displayName: 'RouteForm',
 	}
 });
 
-var RouteList = React.createClass({displayName: 'RouteList',
+var RouteList = React.createClass({displayName: "RouteList",
 	handleClick: function(index){
 		this.props.onRouteClick(index);
 	},
@@ -414,7 +414,7 @@ var RouteList = React.createClass({displayName: 'RouteList',
 	}
 });
 
-var Route = React.createClass({displayName: 'Route',
+var Route = React.createClass({displayName: "Route",
 	handleBarHover: function(index){
 		if (index){
 			var data = this.props.data.elevations[index];
