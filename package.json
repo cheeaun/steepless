@@ -6,8 +6,7 @@
   "license": "MIT",
   "scripts": {
     "serve": "serve . -l 8000",
-    "transpile": "npx swc ./assets/steepless.jsx -o assets/steepless.js -w",
-    "js": "chokidar \"./assets/steepless.jsx\" \"./assets/.swcrc\" -c \"npx spack\"",
+    "js": "esbuild assets/steepless.jsx --bundle --outfile=assets/steepless.js --target=es2016 --sourcemap --minify --watch",
     "start": "concurrently \"npm run js\" \"npm run serve\""
   },
   "dependencies": {
@@ -15,11 +14,8 @@
     "react": "~0.12.1"
   },
   "devDependencies": {
-    "@swc/cli": "~0.1.55",
-    "@swc/core": "~1.2.124",
-    "chokidar": "~3.5.2",
-    "chokidar-cli": "~3.0.0",
     "concurrently": "~6.5.1",
+    "esbuild": "~0.14.10",
     "serve": "~13.0.2"
   }
 }
