@@ -1,5 +1,9 @@
 import React from 'react';
 
+import createReactClass from 'create-react-class';
+
+import ReactDOM from 'react-dom';
+
 var Steepless = {
   directionsService: new google.maps.DirectionsService(),
   directionsRenderer: new google.maps.DirectionsRenderer(),
@@ -11,29 +15,30 @@ var Steepless = {
   chartBarWidth: 2,
 };
 
-var App = React.createClass({
-  getInitialState: function () {
-    return {
-      start: '',
-      end: '',
-      routes: null,
-      distanceUnit: localStorage['steepless:distanceUnit'] || 'km',
-      heightUnit: localStorage['steepless:heightUnit'] || 'm',
-      travelMode: 'walking',
-    };
-  },
-  componentDidMount: function () {
+class App extends React.Component {
+  state = {
+    start: '',
+    end: '',
+    routes: null,
+    distanceUnit: localStorage['steepless:distanceUnit'] || 'km',
+    heightUnit: localStorage['steepless:heightUnit'] || 'm',
+    travelMode: 'walking',
+  };
+
+  componentDidMount() {
     this.hashChange();
     var self = this;
     window.onhashchange = function () {
       self.hashChange();
     };
-  },
-  componentDidUpdate: function () {
+  }
+
+  componentDidUpdate() {
     localStorage['steepless:distanceUnit'] = this.state.distanceUnit;
     localStorage['steepless:heightUnit'] = this.state.heightUnit;
-  },
-  hashChange: function () {
+  }
+
+  hashChange = () => {
     var hash = location.hash.slice(1);
     if (!hash) return;
 
@@ -42,15 +47,17 @@ var App = React.createClass({
     var origin = decodeURIComponent(locations[1]);
     var destination = decodeURIComponent(locations[2]);
 
-    this.setState({
-      travelMode: travelMode,
-      start: origin,
-      end: destination,
-    });
+    this.setState(
+      {
+        travelMode: travelMode,
+        start: origin,
+        end: destination,
+      },
+      this.getRoutes,
+    );
+  };
 
-    this.getRoutes();
-  },
-  getRoutes: function () {
+  getRoutes = () => {
     var self = this;
     var state = this.state;
 
@@ -90,8 +97,9 @@ var App = React.createClass({
         }
       },
     );
-  },
-  getElevations: function () {
+  };
+
+  getElevations = () => {
     var self = this;
     var routes = this.state.routes;
 
@@ -160,24 +168,28 @@ var App = React.createClass({
       .catch(function (err) {
         console.log(err);
       });
-  },
-  handleRouteClick: function (index) {
+  };
+
+  handleRouteClick = (index) => {
     this.state.routes.forEach(function (d, i) {
       d.selected = index == i;
     });
     this.setState(this.state);
 
     Steepless.directionsRenderer.setRouteIndex(index);
-  },
-  handleUnitChange: function (units) {
+  };
+
+  handleUnitChange = (units) => {
     this.setState(units);
-  },
-  handleTravelModeChange: function (travelMode) {
+  };
+
+  handleTravelModeChange = (travelMode) => {
     this.setState({
       travelMode: travelMode,
     });
-  },
-  render: function () {
+  };
+
+  render() {
     var units = {
       distance: this.state.distanceUnit,
       height: this.state.heightUnit,
@@ -209,11 +221,11 @@ var App = React.createClass({
         </div>
       </div>
     );
-  },
-});
+  }
+}
 
-var Icon = React.createClass({
-  render: function () {
+class Icon extends React.Component {
+  render() {
     var type = this.props.type;
     var title = this.props.title;
     return (
@@ -227,54 +239,57 @@ var Icon = React.createClass({
         height={this.props.height}
       ></svg>
     );
-  },
-});
+  }
+}
 
-var Map = React.createClass({
-  getDefaultProps: function () {
-    return {
-      map: {
-        center: new google.maps.LatLng(37.7577, -122.4376),
-        zoom: 12,
-        disableDefaultUI: true,
-        mapId: '4e570dd5e962cb58',
-      },
-    };
-  },
-  statics: {
-    pinpointMarker: new google.maps.Marker({
-      visible: false,
-      clickable: false,
-      zIndex: 1000,
-    }),
-    showPinpointMarker: function (location) {
-      this.pinpointMarker.setPosition(location);
-      this.pinpointMarker.setVisible(true);
+class Map extends React.Component {
+  static defaultProps = {
+    map: {
+      center: new google.maps.LatLng(37.7577, -122.4376),
+      zoom: 12,
+      disableDefaultUI: true,
+      mapId: '4e570dd5e962cb58',
     },
-    hidePinpointMarker: function () {
-      this.pinpointMarker.setVisible(false);
-    },
-  },
-  componentDidMount: function () {
-    var node = this.getDOMNode();
+  };
+
+  static pinpointMarker = new google.maps.Marker({
+    visible: false,
+    clickable: false,
+    zIndex: 1000,
+  });
+
+  static showPinpointMarker(location) {
+    this.pinpointMarker.setPosition(location);
+    this.pinpointMarker.setVisible(true);
+  }
+
+  static hidePinpointMarker() {
+    this.pinpointMarker.setVisible(false);
+  }
+
+  componentDidMount() {
+    var node = ReactDOM.findDOMNode(this);
     var map = new google.maps.Map(node, this.props.map);
     Map.pinpointMarker.setMap(map);
 
     Steepless.directionsRenderer.setMap(map);
-  },
-  render: function () {
-    return <div id="map-canvas"></div>;
-  },
-});
+  }
 
-var Chart = React.createClass({
-  handleBarMouseEnter: function (index) {
+  render() {
+    return <div id="map-canvas"></div>;
+  }
+}
+
+class Chart extends React.Component {
+  handleBarMouseEnter = (index) => {
     this.props.onBarMouseEnter(index);
-  },
-  handleBarMouseLeave: function () {
+  };
+
+  handleBarMouseLeave = () => {
     this.props.onBarMouseLeave();
-  },
-  render: function () {
+  };
+
+  render() {
     var self = this;
     var props = this.props;
     var chartStyle = {
@@ -306,11 +321,11 @@ var Chart = React.createClass({
         {bars}
       </div>
     );
-  },
-});
+  }
+}
 
-var RouteForm = React.createClass({
-  updateLocationHash: function (travelMode, start, end) {
+class RouteForm extends React.Component {
+  updateLocationHash = (travelMode, start, end) => {
     if (!travelMode) travelMode = this.props.travelMode;
     if (!start) start = this.props.start;
     if (!end) end = this.props.end;
@@ -321,16 +336,19 @@ var RouteForm = React.createClass({
       encodeURIComponent(start) +
       '/' +
       encodeURIComponent(end);
-  },
-  handleSubmit: function () {
-    var travelMode = this.refs.travelMode.getDOMNode().value;
-    var start = this.refs.start.getDOMNode().value.trim();
-    var end = this.refs.end.getDOMNode().value.trim();
+  };
+
+  handleSubmit = (e) => {
+    e.preventDefault();
+    var travelMode = ReactDOM.findDOMNode(this.refs.travelMode).value;
+    var start = ReactDOM.findDOMNode(this.refs.start).value.trim();
+    var end = ReactDOM.findDOMNode(this.refs.end).value.trim();
     this.updateLocationHash(travelMode, start, end);
-  },
-  componentDidMount: function () {
-    var startNode = this.refs.start.getDOMNode();
-    var endNode = this.refs.end.getDOMNode();
+  };
+
+  componentDidMount() {
+    var startNode = ReactDOM.findDOMNode(this.refs.start);
+    var endNode = ReactDOM.findDOMNode(this.refs.end);
     var start = startNode.value.trim();
     var end = endNode.value.trim();
 
@@ -341,36 +359,44 @@ var RouteForm = React.createClass({
 
     new google.maps.places.Autocomplete(startNode);
     new google.maps.places.Autocomplete(endNode);
-  },
-  componentWillReceiveProps: function () {
+  }
+
+  componentWillReceiveProps() {
     if (this.props.travelMode)
-      this.refs.travelMode.getDOMNode().value = this.props.travelMode;
-    if (this.props.start) this.refs.start.getDOMNode().value = this.props.start;
-    if (this.props.end) this.refs.end.getDOMNode().value = this.props.end;
-  },
-  handleTravelModeChange: function () {
-    var travelMode = this.refs.travelMode.getDOMNode().value;
+      ReactDOM.findDOMNode(this.refs.travelMode).value = this.props.travelMode;
+    if (this.props.start)
+      ReactDOM.findDOMNode(this.refs.start).value = this.props.start;
+    if (this.props.end)
+      ReactDOM.findDOMNode(this.refs.end).value = this.props.end;
+  }
+
+  handleTravelModeChange = () => {
+    var travelMode = ReactDOM.findDOMNode(this.refs.travelMode).value;
     this.updateLocationHash(travelMode);
-  },
-  handleFlip: function (e) {
+  };
+
+  handleFlip = (e) => {
     e.preventDefault();
-    var start = this.refs.start.getDOMNode().value.trim();
-    var end = this.refs.end.getDOMNode().value.trim();
+    var start = ReactDOM.findDOMNode(this.refs.start).value.trim();
+    var end = ReactDOM.findDOMNode(this.refs.end).value.trim();
     this.updateLocationHash(null, end, start);
-  },
-  handleDistanceChange: function () {
-    var unit = this.refs.distanceSelect.getDOMNode().value;
+  };
+
+  handleDistanceChange = () => {
+    var unit = ReactDOM.findDOMNode(this.refs.distanceSelect).value;
     this.props.onUnitChange({
       distanceUnit: unit,
     });
-  },
-  handleHeightChange: function () {
-    var unit = this.refs.heightSelect.getDOMNode().value;
+  };
+
+  handleHeightChange = () => {
+    var unit = ReactDOM.findDOMNode(this.refs.heightSelect).value;
     this.props.onUnitChange({
       heightUnit: unit,
     });
-  },
-  render: function () {
+  };
+
+  render() {
     var units = this.props.units;
     return (
       <form id="directions-form" onSubmit={this.handleSubmit}>
@@ -441,17 +467,19 @@ var RouteForm = React.createClass({
         </div>
       </form>
     );
-  },
-});
+  }
+}
 
-var RouteList = React.createClass({
-  handleClick: function (index) {
+class RouteList extends React.Component {
+  handleClick = (index) => {
     this.props.onRouteClick(index);
-  },
-  handlePinpoint: function (data) {
+  };
+
+  handlePinpoint = (data) => {
     this.props.onSetPinpoint(data);
-  },
-  render: function () {
+  };
+
+  render() {
     var self = this;
     var data = this.props.data;
     if (data && data.length) {
@@ -496,10 +524,12 @@ var RouteList = React.createClass({
         </div>
       );
     }
-  },
-});
+  }
+}
 
-var Route = React.createClass({
+var Route = createReactClass({
+  displayName: 'Route',
+
   handleBarHover: function (index) {
     if (index) {
       var data = this.props.data.elevations[index];
@@ -508,11 +538,13 @@ var Route = React.createClass({
       Map.hidePinpointMarker();
     }
   },
+
   iconMap: {
     walking: 'pedestrian',
     bicycling: 'bicycle',
     driving: 'car-side',
   },
+
   render: function () {
     var data = this.props.data;
     var units = this.props.units;
@@ -621,4 +653,4 @@ var Route = React.createClass({
   },
 });
 
-React.renderComponent(<App />, document.getElementById('app'));
+ReactDOM.render(<App />, document.getElementById('app'));
