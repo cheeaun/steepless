@@ -26,17 +26,18 @@ a:hover {
 #map-canvas {
   position: absolute;
   top: 0;
-  left: 460px;
   right: 0;
   bottom: 0;
-  min-width: 300px;
+  width: calc(100% - 460px);
+  min-width: 50%;
 }
 #sidebar {
   position: absolute;
   top: 0;
   left: 0;
   bottom: 0;
-  width: 460px;
+  width: 50%;
+  max-width: 460px;
   box-shadow: 0px 2px 5px 0px rgba(0, 0, 0, 0.26);
   display: flex;
   flex-direction: column;
@@ -60,8 +61,8 @@ header h1 {
 }
 #directions-form .field-section {
   display: inline-block;
-  width: 198px;
   position: relative;
+  flex-grow: 1;
 }
 #directions-form .field-section:after {
   content: '';
@@ -85,8 +86,9 @@ header h1 {
 #directions-form .options {
   margin-top: 5px;
   padding: 5px 0;
-  float: left;
   color: #aaa;
+  flex-grow: 1;
+  margin-right: 10px;
 }
 #directions-form .options .icon {
   -webkit-transition: -webkit-transform 0.6s;
@@ -122,7 +124,7 @@ header h1 {
   padding: 10px 0;
   border-bottom: 2px solid #e0e0e0;
   margin: 0 0 5px;
-  width: 198px;
+  width: 100%;
   box-sizing: border-box;
   outline: 0;
   -webkit-transition: border-bottom-color 0.3s;
@@ -132,8 +134,11 @@ header h1 {
 #directions-form input:focus {
   border-bottom-color: #259b24;
 }
+#directions-form .form-fields {
+  display: flex;
+}
 #directions-form .form-footer {
-  text-align: right;
+  display: flex;
   margin-top: 10px;
 }
 #flip-direction {
@@ -248,6 +253,7 @@ header h1 {
   -webkit-transition: height 0.3s;
   -moz-transition: height 0.3s;
   transition: height 0.3s;
+  display: flex;
 }
 .chart div {
   box-sizing: border-box;
@@ -257,6 +263,7 @@ header h1 {
   border-bottom-style: solid;
   border-bottom-color: #a3e9a4;
   overflow: hidden;
+  flex-grow: 1;
 }
 .selected .chart div {
   border-bottom-color: #72d572;
@@ -279,4 +286,31 @@ header h1 {
 }
 .chart div:hover span {
   opacity: 1;
+}
+
+/* media query less than 640px */
+@media screen and (max-width: 640px) {
+  #map-canvas {
+    bottom: 60%;
+    width: 100%;
+  }
+  #sidebar {
+    top: 40%;
+    width: 100%;
+    max-width: 100%;
+  }
+  header {
+    padding: 10px;
+  }
+  header h1 {
+    font-size: 1.05em;
+    font-weight: bold;
+  }
+  #directions-form,
+  #routes-list a {
+    padding: 10px;
+  }
+  #directions-form .form-footer {
+    margin-top: 0;
+  }
 }

@@ -397,39 +397,41 @@ class RouteForm extends React.Component {
     var units = this.props.units;
     return (
       <form id="directions-form" onSubmit={this.handleSubmit}>
-        <div className="field-section">
-          <label>
-            <select ref="travelMode" onChange={this.handleTravelModeChange}>
-              <option value="walking">Walking</option>
-              <option value="bicycling">Bicycling</option>
-              <option value="driving">Driving</option>
-            </select>{' '}
-            from
-          </label>
-          <input
-            ref="start"
-            id="directions-start"
-            placeholder="Start"
-            required
-          />
-        </div>
-        <a
-          href="#"
-          id="flip-direction"
-          onClick={this.handleFlip}
-          title="Flip origin and destination"
-          tabIndex="-1"
-        >
-          <Icon type="arrow-right" width="14" height="14"></Icon>
-        </a>
-        <div className="field-section">
-          <label htmlFor="directions-end">To</label>
-          <input
-            ref="end"
-            id="directions-end"
-            placeholder="Destination"
-            required
-          />
+        <div class="form-fields">
+          <div className="field-section">
+            <label>
+              <select ref="travelMode" onChange={this.handleTravelModeChange}>
+                <option value="walking">Walking</option>
+                <option value="bicycling">Bicycling</option>
+                <option value="driving">Driving</option>
+              </select>{' '}
+              from
+            </label>
+            <input
+              ref="start"
+              id="directions-start"
+              placeholder="Start"
+              required
+            />
+          </div>
+          <a
+            href="#"
+            id="flip-direction"
+            onClick={this.handleFlip}
+            title="Flip origin and destination"
+            tabIndex="-1"
+          >
+            <Icon type="arrow-right" width="14" height="14"></Icon>
+          </a>
+          <div className="field-section">
+            <label htmlFor="directions-end">To</label>
+            <input
+              ref="end"
+              id="directions-end"
+              placeholder="Destination"
+              required
+            />
+          </div>
         </div>
         <div className="form-footer">
           <div className="options">
@@ -546,10 +548,12 @@ class Route extends React.Component {
     var route = data.route;
     var leg = route.legs[0];
     var distance = leg.distance.value;
-    var width = Math.ceil(
-      (distance / Steepless.longestDistance) * Steepless.chartWidth,
-    );
-    var chartWidth = { width: width };
+    var width =
+      (Math.ceil(
+        (distance / Steepless.longestDistance) * Steepless.chartWidth,
+      ) /
+        Steepless.chartWidth) *
+      100;
     var stats = data.stats;
     var domain = [0, Steepless.highestElevation];
 
@@ -632,7 +636,7 @@ class Route extends React.Component {
         <Chart
           data={elevations}
           domain={domain}
-          width={width}
+          width={`${width}%`}
           height={height}
           onBarMouseEnter={this.handleBarHover}
           onBarMouseLeave={this.handleBarHover}
