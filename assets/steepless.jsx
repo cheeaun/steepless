@@ -1,7 +1,4 @@
 import React from 'react';
-
-import createReactClass from 'create-react-class';
-
 import ReactDOM from 'react-dom';
 
 var Steepless = {
@@ -527,25 +524,23 @@ class RouteList extends React.Component {
   }
 }
 
-var Route = createReactClass({
-  displayName: 'Route',
+const iconMap = {
+  walking: 'pedestrian',
+  bicycling: 'bicycle',
+  driving: 'car-side',
+};
 
-  handleBarHover: function (index) {
+class Route extends React.Component {
+  handleBarHover = (index) => {
     if (index) {
       var data = this.props.data.elevations[index];
       Map.showPinpointMarker(data.location);
     } else {
       Map.hidePinpointMarker();
     }
-  },
+  };
 
-  iconMap: {
-    walking: 'pedestrian',
-    bicycling: 'bicycle',
-    driving: 'car-side',
-  },
-
-  render: function () {
+  render() {
     var data = this.props.data;
     var units = this.props.units;
     var route = data.route;
@@ -558,7 +553,7 @@ var Route = createReactClass({
     var stats = data.stats;
     var domain = [0, Steepless.highestElevation];
 
-    var iconType = this.iconMap[this.props.travelMode];
+    var iconType = iconMap[this.props.travelMode];
 
     var height = Math.round(
       (Steepless.highestElevation - Steepless.lowestElevation) / 2,
@@ -650,7 +645,7 @@ var Route = createReactClass({
         </div>
       </a>
     );
-  },
-});
+  }
+}
 
 ReactDOM.render(<App />, document.getElementById('app'));
