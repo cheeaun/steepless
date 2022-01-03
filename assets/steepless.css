@@ -1,274 +1,282 @@
-html{ height: 100% }
-body{
-	height: 100%;
-	margin: 0;
-	padding: 0;
-	font-family: RobotoDraft, Helvetica Neue, Helvetica, Arial, sans-serif;
+html {
+  height: 100%;
 }
-input, button, select{
-	font-family: RobotoDraft, Helvetica Neue, Helvetica, Arial, sans-serif;
-	font-size: 1em;
+body {
+  height: 100%;
+  margin: 0;
+  padding: 0;
+  font-family: RobotoDraft, Helvetica Neue, Helvetica, Arial, sans-serif;
 }
-a{
-	color: #2196f3;
-	text-decoration: none;
+input,
+button,
+select {
+  font-family: RobotoDraft, Helvetica Neue, Helvetica, Arial, sans-serif;
+  font-size: 1em;
 }
-a:hover{
-	color: #1565c0;
+a {
+  color: #2196f3;
+  text-decoration: none;
 }
-.icon{
-	fill: currentColor;
+a:hover {
+  color: #1565c0;
 }
-#map-canvas{
-	position: absolute;
-	top: 0;
-	left: 460px;
-	right: 0;
-	bottom: 0;
-	min-width: 300px;
+.icon {
+  fill: currentColor;
 }
-#sidebar{
-	position: absolute;
-	top: 0;
-	left: 0;
-	bottom: 0;
-	width: 460px;
-	box-shadow: 0px 2px 5px 0px rgba(0, 0, 0, 0.26);
-	display: flex;
-	flex-direction: column;
+#map-canvas {
+  position: absolute;
+  top: 0;
+  left: 460px;
+  right: 0;
+  bottom: 0;
+  min-width: 300px;
 }
-header{
-	cursor: default;
-	padding: 12px 15px;
-	color: #fff;
-	background-color: #259B24;
+#sidebar {
+  position: absolute;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  width: 460px;
+  box-shadow: 0px 2px 5px 0px rgba(0, 0, 0, 0.26);
+  display: flex;
+  flex-direction: column;
 }
-header h1{
-	font-size: 1.4em;
-	font-weight: 400;
-	margin: 0;
-	padding: 0;
+header {
+  cursor: default;
+  padding: 12px 15px;
+  color: #fff;
+  background-color: #259b24;
 }
-#directions-form{
-	padding: 15px;
-	word-spacing: 10px;
-	border-bottom: 1px solid #ddd;
+header h1 {
+  font-size: 1.4em;
+  font-weight: 400;
+  margin: 0;
+  padding: 0;
 }
-#directions-form .field-section{
-	display: inline-block;
-	width: 198px;
-	position: relative;
+#directions-form {
+  padding: 15px;
+  word-spacing: 10px;
+  border-bottom: 1px solid #ddd;
 }
-#directions-form .field-section:after{
-	content: '';
-	pointer-events: none;
-	position: absolute;
-	width: 30px;
-	top: 0;
-	right: 0;
-	bottom: 10px;
-	background-image: linear-gradient(to left, rgba(255, 255, 255, 1), rgba(255, 255, 255, 0));
+#directions-form .field-section {
+  display: inline-block;
+  width: 198px;
+  position: relative;
 }
-#directions-form label{
-	display: block;
-	font-size: .8em;
-	color: #aaa;
+#directions-form .field-section:after {
+  content: '';
+  pointer-events: none;
+  position: absolute;
+  width: 30px;
+  top: 0;
+  right: 0;
+  bottom: 10px;
+  background-image: linear-gradient(
+    to left,
+    rgba(255, 255, 255, 1),
+    rgba(255, 255, 255, 0)
+  );
 }
-#directions-form .options{
-	margin-top: 5px;
-	padding: 5px 0;
-	float: left;
-	color: #aaa;
+#directions-form label {
+  display: block;
+  font-size: 0.8em;
+  color: #aaa;
 }
-#directions-form .options .icon{
-	-webkit-transition: -webkit-transform .6s;
-	-moz-transition: -moz-transform .6s;
-	transition: transform .6s;
+#directions-form .options {
+  margin-top: 5px;
+  padding: 5px 0;
+  float: left;
+  color: #aaa;
 }
-#directions-form .options .icon+span{
-	margin-left: 5px;
-	opacity: 0;
-	-webkit-transition: opacity .6s;
-	-moz-transition: opacity .6s;
-	transition: opacity .6s;
+#directions-form .options .icon {
+  -webkit-transition: -webkit-transform 0.6s;
+  -moz-transition: -moz-transform 0.6s;
+  transition: transform 0.6s;
 }
-#directions-form .options:hover .icon{
-	-webkit-transform: rotate(90deg);
-	-moz-transform: rotate(90deg);
-	transform: rotate(90deg);
+#directions-form .options .icon + span {
+  margin-left: 5px;
+  opacity: 0;
+  -webkit-transition: opacity 0.6s;
+  -moz-transition: opacity 0.6s;
+  transition: opacity 0.6s;
 }
-#directions-form .options:hover .icon+span{
-	opacity: 1;
+#directions-form .options:hover .icon {
+  -webkit-transform: rotate(90deg);
+  -moz-transform: rotate(90deg);
+  transform: rotate(90deg);
 }
-#directions-form .options label{
-	display: inline-block;
+#directions-form .options:hover .icon + span {
+  opacity: 1;
 }
-#directions-form select{
-	border: 0;
-	margin: 0;
-	padding: 0;
-	background-color: rgba(0,0,0,.05);
+#directions-form .options label {
+  display: inline-block;
 }
-#directions-form input{
-	border: 0;
-	padding: 10px 0;
-	border-bottom: 2px solid #e0e0e0;
-	margin: 0 0 5px;
-	width: 198px;
-	box-sizing: border-box;
-	outline: 0;
-	-webkit-transition: border-bottom-color .3s;
-	-moz-transition: border-bottom-color .3s;
-	transition: border-bottom-color .3s;
+#directions-form select {
+  border: 0;
+  margin: 0;
+  padding: 0;
+  background-color: rgba(0, 0, 0, 0.05);
 }
-#directions-form input:focus{
-	border-bottom-color: #259b24;
+#directions-form input {
+  border: 0;
+  padding: 10px 0;
+  border-bottom: 2px solid #e0e0e0;
+  margin: 0 0 5px;
+  width: 198px;
+  box-sizing: border-box;
+  outline: 0;
+  -webkit-transition: border-bottom-color 0.3s;
+  -moz-transition: border-bottom-color 0.3s;
+  transition: border-bottom-color 0.3s;
 }
-#directions-form .form-footer{
-	text-align: right;
-	margin-top: 10px;
+#directions-form input:focus {
+  border-bottom-color: #259b24;
 }
-#flip-direction{
-	color: #aaa;
-	box-sizing: border-box;
-	padding: 10px;
-	line-height: 14px;
-	display: inline-block;
+#directions-form .form-footer {
+  text-align: right;
+  margin-top: 10px;
 }
-#flip-direction .icon{
-	-webkit-transition: -webkit-transform .6s;
-	-moz-transition: -moz-transform .6s;
-	transition: transform .6s;
+#flip-direction {
+  color: #aaa;
+  box-sizing: border-box;
+  padding: 10px;
+  line-height: 14px;
+  display: inline-block;
 }
-#flip-direction:hover .icon{
-	-webkit-transform: rotateY(-180deg);
-	-moz-transform: rotateY(-180deg);
-	transform: rotateY(-180deg);
+#flip-direction .icon {
+  -webkit-transition: -webkit-transform 0.6s;
+  -moz-transition: -moz-transform 0.6s;
+  transition: transform 0.6s;
 }
-#directions-form button{
-	border: 0;
-	padding: 7px 10px;
-	margin: 0;
-	background-color: #259b24;
-	color: #fff;
-	font-weight: 500;
-	text-align: left;
-	text-transform: uppercase;
-	cursor: pointer;
-	box-sizing: border-box;
-	box-shadow: 0 2px 3px #aaa;
+#flip-direction:hover .icon {
+  -webkit-transform: rotateY(-180deg);
+  -moz-transform: rotateY(-180deg);
+  transform: rotateY(-180deg);
 }
-#directions-form button:active{
-	opacity: .7;
+#directions-form button {
+  border: 0;
+  padding: 7px 10px;
+  margin: 0;
+  background-color: #259b24;
+  color: #fff;
+  font-weight: 500;
+  text-align: left;
+  text-transform: uppercase;
+  cursor: pointer;
+  box-sizing: border-box;
+  box-shadow: 0 2px 3px #aaa;
 }
-#routes-container{
-	background-color: #eee;
-	position: relative;
-	flex-grow: 1;
+#directions-form button:active {
+  opacity: 0.7;
 }
-#routes-container>p{
-	margin: 30px 15px;
-	text-align: center;
-	color: #999;
+#routes-container {
+  background-color: #eee;
+  position: relative;
+  flex-grow: 1;
 }
-#routes-list{
-	position: absolute;
-	top: 0;
-	left: 0;
-	right: 0;
-	bottom: 0;
-	overflow-y: auto;
-	overflow-x: hidden;
+#routes-container > p {
+  margin: 30px 15px;
+  text-align: center;
+  color: #999;
+}
+#routes-list {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  overflow-y: auto;
+  overflow-x: hidden;
 }
 #routes-list,
-#routes-list li{
-	list-style: none;
-	margin: 0;
-	padding: 0;
+#routes-list li {
+  list-style: none;
+  margin: 0;
+  padding: 0;
 }
-#routes-list a{
-	cursor: pointer;
-	display: block;
-	text-decoration: none;
-	padding: 15px;
-	color: #9e9e9e;
-	border-bottom: 1px solid #ddd;
-	background-color: #fff;
-	-webkit-transition: background-color .3s;
-	-moz-transition: background-color .3s;
-	transition: background-color .3s;
+#routes-list a {
+  cursor: pointer;
+  display: block;
+  text-decoration: none;
+  padding: 15px;
+  color: #9e9e9e;
+  border-bottom: 1px solid #ddd;
+  background-color: #fff;
+  -webkit-transition: background-color 0.3s;
+  -moz-transition: background-color 0.3s;
+  transition: background-color 0.3s;
 }
-#routes-list .heading{
-	margin-bottom: .5em;
+#routes-list .heading {
+  margin-bottom: 0.5em;
 }
-#routes-list a:hover .heading{
-	color: #0d5302;
+#routes-list a:hover .heading {
+  color: #0d5302;
 }
-#routes-list .selected a{
-	color: #0d5302;
-	background-color: #d0f8ce;
+#routes-list .selected a {
+  color: #0d5302;
+  background-color: #d0f8ce;
 }
 #routes-list .heading,
 #routes-list .stats,
 #routes-list .metadata,
-#routes-list :not(.selected) a .chart{
-	pointer-events: none;
+#routes-list :not(.selected) a .chart {
+  pointer-events: none;
 }
-#routes-list .heading .icon{
-	vertical-align: text-bottom;
+#routes-list .heading .icon {
+  vertical-align: text-bottom;
 }
-#routes-list .stats{
-	float: right;
-	margin-top: .5em;
-	opacity: .65;
-	font-size: .8em;
+#routes-list .stats {
+  float: right;
+  margin-top: 0.5em;
+  opacity: 0.65;
+  font-size: 0.8em;
 }
-#routes-list .metadata{
-	margin-top: .5em;
-	opacity: .65;
-	font-size: .8em;
-}
-
-.icon{
-	display: inline-block;
-	vertical-align: middle;
+#routes-list .metadata {
+  margin-top: 0.5em;
+  opacity: 0.65;
+  font-size: 0.8em;
 }
 
-.chart{
-	position: relative;
-	white-space: nowrap;
-	-webkit-transition: height .3s;
-	-moz-transition: height .3s;
-	transition: height .3s;
+.icon {
+  display: inline-block;
+  vertical-align: middle;
 }
-.chart div{
-	box-sizing: border-box;
-	display: inline-block;
-	width: 2px;
-	height: 100%;
-	border-bottom-style: solid;
-	border-bottom-color: #a3e9a4;
-	overflow: hidden;
+
+.chart {
+  position: relative;
+  white-space: nowrap;
+  -webkit-transition: height 0.3s;
+  -moz-transition: height 0.3s;
+  transition: height 0.3s;
 }
-.selected .chart div{
-	border-bottom-color: #72d572;
+.chart div {
+  box-sizing: border-box;
+  display: inline-block;
+  width: 2px;
+  height: 100%;
+  border-bottom-style: solid;
+  border-bottom-color: #a3e9a4;
+  overflow: hidden;
 }
-.chart div:hover{
-	background-color: #72d572;
-	border-bottom-color: #0a7e07;
+.selected .chart div {
+  border-bottom-color: #72d572;
 }
-.chart div span{
-	pointer-events: none;
-	font-size: .7em;
-	padding: .5em;
-	height: 1em;
-	line-height: 1em;
-	opacity: 0;
-	color: #fff;
-	background-color: rgba(10,126,7,.75);
-	position: absolute;
-	top: -2em;
+.chart div:hover {
+  background-color: #72d572;
+  border-bottom-color: #0a7e07;
 }
-.chart div:hover span{
-	opacity: 1;
+.chart div span {
+  pointer-events: none;
+  font-size: 0.7em;
+  padding: 0.5em;
+  height: 1em;
+  line-height: 1em;
+  opacity: 0;
+  color: #fff;
+  background-color: rgba(10, 126, 7, 0.75);
+  position: absolute;
+  top: -2em;
+}
+.chart div:hover span {
+  opacity: 1;
 }
