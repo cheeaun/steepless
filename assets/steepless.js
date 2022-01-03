@@ -243,7 +243,7 @@ var Chart = React.createClass({
         var props = this.props;
         var chartStyle = {
             width: props.width,
-            height: 0 // initially zero height
+            height: 0
         };
         var bars = '';
         if (props.data) {
@@ -337,7 +337,7 @@ var RouteForm = React.createClass({
             value: "bicycling"
         }, "Bicycling"), /*#__PURE__*/ React.createElement("option", {
             value: "driving"
-        }, "Driving")), " from"), /*#__PURE__*/ React.createElement("input", {
+        }, "Driving")), ' ', "from"), /*#__PURE__*/ React.createElement("input", {
             ref: "start",
             id: "directions-start",
             placeholder: "Start",
@@ -426,7 +426,7 @@ var RouteList = React.createClass({
         } else {
             return(/*#__PURE__*/ React.createElement("div", {
                 id: "routes-container"
-            }, /*#__PURE__*/ React.createElement("p", null, "Begin by entering the Start and Destination locations above."), /*#__PURE__*/ React.createElement("p", null, "Try an example: ", /*#__PURE__*/ React.createElement("a", {
+            }, /*#__PURE__*/ React.createElement("p", null, "Begin by entering the Start and Destination locations above."), /*#__PURE__*/ React.createElement("p", null, "Try an example:", ' ', /*#__PURE__*/ React.createElement("a", {
                 href: "#walking/Chinatown, SF/Twin Peaks, SF"
             }, "Walking from Chinatown to Twin Peaks"))));
         }
@@ -478,13 +478,13 @@ var Route = React.createClass({
             width: "14",
             height: "14",
             title: "Rise"
-        }), " ", rise) : '';
+        }), ' ', rise) : '';
         var dropStat = drop ? /*#__PURE__*/ React.createElement("span", null, /*#__PURE__*/ React.createElement(Icon, {
             type: "arrow-graph-down-right",
             width: "14",
             height: "14",
             title: "Drop"
-        }), " ", drop) : '';
+        }), ' ', drop) : '';
         var elevations = data.elevations ? data.elevations.map(function(d) {
             var elevation = d.elevation;
             return {
@@ -499,7 +499,7 @@ var Route = React.createClass({
             width: "24",
             height: "24",
             title: iconType
-        }), " via ", route.summary), /*#__PURE__*/ React.createElement(Chart, {
+        }), ' ', "via ", route.summary), /*#__PURE__*/ React.createElement(Chart, {
             data: elevations,
             domain: domain,
             width: width,
