@@ -1,5 +1,4 @@
 import React from 'react';
-import queue from 'queue-async';
 
 var Steepless = {
   directionsService: new google.maps.DirectionsService(),
@@ -96,10 +95,8 @@ var App = React.createClass({
     var self = this;
     var routes = this.state.routes;
 
-    var q = queue();
-
-    routes.forEach(function (data, i) {
-      q.defer(function (done) {
+    const elevationCalls = routes.map((data) => {
+      return new Promise((resolve, reject) => {
         var route = data.route;
         var path = route.overview_path;
         var distance = route.legs[0].distance.value;
@@ -114,56 +111,55 @@ var App = React.createClass({
           },
           function (result, status) {
             if (status == google.maps.ElevationStatus.OK) {
-              done(null, {
+              resolve({
                 data: data,
                 elevations: result,
               });
             } else {
-              done(status);
+              reject(status);
             }
           },
         );
       });
     });
 
-    q.awaitAll(function (error, results) {
-      if (error) {
-        console.log(error);
-        return;
-      }
+    Promise.all(elevationCalls)
+      .then(function (results) {
+        var highestElevation = 0,
+          lowestElevation = Infinity;
 
-      var highestElevation = 0,
-        lowestElevation = Infinity;
+        results.forEach(function (result, i) {
+          var elevations = result.elevations;
+          var prevElevation = elevations[0].elevation;
+          var rise = 0,
+            drop = 0;
 
-      results.forEach(function (result, i) {
-        var elevations = result.elevations;
-        var prevElevation = elevations[0].elevation;
-        var rise = 0,
-          drop = 0;
+          elevations.forEach(function (r) {
+            var elevation = r.elevation;
+            if (elevation > prevElevation) rise += elevation - prevElevation;
+            if (elevation < prevElevation) drop += prevElevation - elevation;
+            prevElevation = elevation;
 
-        elevations.forEach(function (r) {
-          var elevation = r.elevation;
-          if (elevation > prevElevation) rise += elevation - prevElevation;
-          if (elevation < prevElevation) drop += prevElevation - elevation;
-          prevElevation = elevation;
+            if (elevation > highestElevation) highestElevation = elevation;
+            if (elevation < lowestElevation) lowestElevation = elevation;
+          });
 
-          if (elevation > highestElevation) highestElevation = elevation;
-          if (elevation < lowestElevation) lowestElevation = elevation;
+          result.data.stats = {
+            rise: rise,
+            drop: drop,
+          };
+          result.data.elevations = elevations;
         });
 
-        result.data.stats = {
-          rise: rise,
-          drop: drop,
-        };
-        result.data.elevations = elevations;
+        Steepless.highestElevation = highestElevation;
+        Steepless.lowestElevation = lowestElevation;
+        self.setState({
+          routes: routes,
+        });
+      })
+      .catch(function (err) {
+        console.log(err);
       });
-
-      Steepless.highestElevation = highestElevation;
-      Steepless.lowestElevation = lowestElevation;
-      self.setState({
-        routes: routes,
-      });
-    });
   },
   handleRouteClick: function (index) {
     this.state.routes.forEach(function (d, i) {

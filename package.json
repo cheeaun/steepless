@@ -10,7 +10,6 @@
     "start": "concurrently \"npm run js\" \"npm run serve\""
   },
   "dependencies": {
-    "queue-async": "~1.1.0",
     "react": "~0.12.1"
   },
   "devDependencies": {
