@@ -2,18 +2,24 @@
   "name": "steepless",
   "version": "0.0.1",
   "description": "Find the flattest routes and avoid the hilliest routes",
+  "author": "Lim Chee Aun",
+  "license": "MIT",
   "scripts": {
     "serve": "serve . -l 8000",
-    "js": "npx swc ./assets/steepless.jsx -o assets/steepless.js -w",
+    "transpile": "npx swc ./assets/steepless.jsx -o assets/steepless.js -w",
+    "js": "chokidar \"./assets/steepless.jsx\" \"./assets/.swcrc\" -c \"npx spack\"",
     "start": "concurrently \"npm run js\" \"npm run serve\""
+  },
+  "dependencies": {
+    "queue-async": "~1.1.0",
+    "react": "~0.12.1"
   },
   "devDependencies": {
     "@swc/cli": "~0.1.55",
     "@swc/core": "~1.2.124",
     "chokidar": "~3.5.2",
+    "chokidar-cli": "~3.0.0",
     "concurrently": "~6.5.1",
     "serve": "~13.0.2"
-  },
-  "author": "Lim Chee Aun",
-  "license": "MIT"
+  }
 }

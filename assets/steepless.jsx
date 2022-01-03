@@ -1,3 +1,9 @@
+// Import from dist/react because of a commonjs/import issue
+// The error was: "memoizeStringOnly is not a function"
+// It exports a {default: function} instead of a function
+import React from 'react/dist/react';
+import queue from 'queue-async';
+
 var Steepless = {
   directionsService: new google.maps.DirectionsService(),
   directionsRenderer: new google.maps.DirectionsRenderer(),
