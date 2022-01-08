@@ -9,6 +9,7 @@ import ReactDOM from 'react-dom';
 
 const directionsService = new google.maps.DirectionsService();
 const directionsRenderer = new google.maps.DirectionsRenderer({
+  suppressBicyclingLayer: true,
   hideRouteList: true,
   polylineOptions: {
     strokeColor: '#259b24',
