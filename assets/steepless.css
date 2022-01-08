@@ -199,7 +199,7 @@ header h1 {
   margin: 0;
   padding: 0;
 }
-#routes-list a {
+#routes-list li > div {
   cursor: pointer;
   display: block;
   text-decoration: none;
@@ -214,17 +214,17 @@ header h1 {
 #routes-list .heading {
   margin-bottom: 0.5em;
 }
-#routes-list a:hover .heading {
+#routes-list div:hover .heading {
   color: #0d5302;
 }
-#routes-list .selected a {
+#routes-list .selected {
   color: #0d5302;
   background-color: #d0f8ce;
 }
 #routes-list .heading,
 #routes-list .stats,
 #routes-list .metadata,
-#routes-list :not(.selected) a .chart {
+#routes-list :not(.selected) > .chart {
   pointer-events: none;
 }
 #routes-list .heading .icon {
