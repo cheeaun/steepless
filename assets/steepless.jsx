@@ -8,7 +8,15 @@ import React, {
 import ReactDOM from 'react-dom';
 
 const directionsService = new google.maps.DirectionsService();
-const directionsRenderer = new google.maps.DirectionsRenderer();
+const directionsRenderer = new google.maps.DirectionsRenderer({
+  hideRouteList: true,
+  polylineOptions: {
+    strokeColor: '#259b24',
+  },
+  markerOptions: {
+    animation: google.maps.Animation.DROP,
+  },
+});
 const elevationService = new google.maps.ElevationService();
 
 const iconMap = {
@@ -58,7 +66,7 @@ const Map = ({ onInit = () => {} }) => {
     const map = new google.maps.Map(mapRef.current, {
       center: new google.maps.LatLng(37.7577, -122.4376),
       zoom: 12,
-      mapId: '4e570dd5e962cb58',
+      mapId: 'f7422a246595028',
       disableDefaultUI: true,
       zoomControl: true,
     });
