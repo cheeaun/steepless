@@ -20,6 +20,14 @@ const chart = {
   width: 400,
   barWidth: 2,
 };
+const distanceUnit = {
+  metric: 'km',
+  imperial: 'miles',
+};
+const heightUnit = {
+  metric: 'm',
+  imperial: 'ft',
+};
 
 const pinpointMarker = new google.maps.Marker({
   visible: false,
@@ -44,7 +52,7 @@ const convertMetersToFeet = (meters) => meters * 3.28084;
 const convertMetersToKilometers = (meters) => meters * 0.001;
 const convertMetersToMiles = (meters) => meters * 0.000621371;
 
-const Map = () => {
+const Map = ({ onInit = () => {} }) => {
   const mapRef = useRef();
   useEffect(() => {
     const map = new google.maps.Map(mapRef.current, {
@@ -55,8 +63,7 @@ const Map = () => {
       zoomControl: true,
     });
 
-    pinpointMarker.setMap(map);
-    directionsRenderer.setMap(map);
+    onInit(map);
   }, []);
 
   return <div ref={mapRef} id="map-canvas" />;
@@ -101,8 +108,7 @@ const Route = ({
   selected,
   travelMode,
   longestDistance,
-  heightUnit,
-  distanceUnit,
+  unitSystem,
   onClick = () => {},
 }) => {
   const [elevations, setElevations] = useState([]);
@@ -164,18 +170,18 @@ const Route = ({
   const riseStat = !!rise && (
     <span>
       <Icon type="arrow-graph-up-right" width="14" height="14" title="Rise" />{' '}
-      {Math.round(heightUnit === 'm' ? rise : convertMetersToFeet(rise)) +
+      {Math.round(unitSystem === 'metric' ? rise : convertMetersToFeet(rise)) +
         ' ' +
-        heightUnit}
+        heightUnit[unitSystem]}
     </span>
   );
 
   const dropStat = !!drop && (
     <span>
       <Icon type="arrow-graph-down-right" width="14" height="14" title="Drop" />{' '}
-      {Math.round(heightUnit === 'm' ? drop : convertMetersToFeet(drop)) +
+      {Math.round(unitSystem === 'metric' ? drop : convertMetersToFeet(drop)) +
         ' ' +
-        heightUnit}
+        heightUnit[unitSystem]}
     </span>
   );
 
@@ -206,8 +212,10 @@ const Route = ({
         data={elevations.map(({ elevation }) => ({
           value: elevation,
           title: `${Math.round(
-            heightUnit === 'm' ? elevation : convertMetersToFeet(elevation),
-          )} ${heightUnit}`,
+            unitSystem === 'metric'
+              ? elevation
+              : convertMetersToFeet(elevation),
+          )} ${heightUnit[unitSystem]}`,
         }))}
         domain={domain}
         width={`${width}%`}
@@ -220,11 +228,11 @@ const Route = ({
       </div>
       <div className="metadata">
         {leg.duration.text}&nbsp;&nbsp;&nbsp;
-        {(distanceUnit === 'km'
+        {(unitSystem === 'metric'
           ? convertMetersToKilometers(distanceVal)
           : convertMetersToMiles(distanceVal)
         ).toFixed(2)}{' '}
-        {distanceUnit}
+        {distanceUnit[unitSystem]}
       </div>
     </div>
   );
@@ -232,11 +240,8 @@ const Route = ({
 
 const App = () => {
   const [travelMode, setTravelMode] = useState('walking');
-  const [distanceUnit, setDistanceUnit] = useState(
-    localStorage['steepless:distanceUnit'] || 'km',
-  );
-  const [heightUnit, setHeightUnit] = useState(
-    localStorage['steepless:heightUnit'] || 'm',
+  const [unitSystem, setUnitSystem] = useState(
+    localStorage['steepless:unitSystem'] || 'metric',
   );
   const [routes, setRoutes] = useState([]);
   const [selectedRouteIndex, setSelectedRouteIndex] = useState(0);
@@ -253,44 +258,43 @@ const App = () => {
       const [travelMode, origin, destination] = hash
         .split('/')
         .map(decodeURIComponent);
-      setTravelMode(travelMode);
-      startFieldRef.current.value = origin;
-      endFieldRef.current.value = destination;
+      if (travelMode) setTravelMode(travelMode);
+      if (origin) startFieldRef.current.value = origin;
+      if (destination) endFieldRef.current.value = destination;
 
       setError(null);
 
-      directionsService.route(
-        {
-          origin,
-          destination,
-          travelMode: google.maps.TravelMode[travelMode.toUpperCase()],
-          provideRouteAlternatives: true,
-          unitSystem: google.maps.UnitSystem.METRIC,
-        },
-        (response, status) => {
-          if (status === google.maps.DirectionsStatus.OK) {
-            const { routes } = response;
-            console.log({ response });
-            setRoutes(routes);
-            setSelectedRouteIndex(0);
-            directionsRenderer.setDirections(response);
-          } else {
-            setRoutes([]);
-            setError({ status });
-          }
-        },
-      );
+      if (origin && destination) {
+        directionsService.route(
+          {
+            origin,
+            destination,
+            travelMode: google.maps.TravelMode[travelMode.toUpperCase()],
+            provideRouteAlternatives: true,
+            unitSystem: google.maps.UnitSystem.METRIC,
+          },
+          (response, status) => {
+            if (status === google.maps.DirectionsStatus.OK) {
+              const { routes } = response;
+              console.log({ response });
+              setRoutes(routes);
+              setSelectedRouteIndex(0);
+              directionsRenderer.setDirections(response);
+            } else {
+              setRoutes([]);
+              setError({ status });
+            }
+          },
+        );
+      }
     };
     hashChange();
     window.addEventListener('hashchange', hashChange);
-
-    new google.maps.places.Autocomplete(startFieldRef.current);
-    new google.maps.places.Autocomplete(endFieldRef.current);
   }, []);
 
   const handleSubmit = useCallback(
     (e) => {
-      e.preventDefault();
+      e?.preventDefault();
       const origin = startFieldRef.current.value;
       const destination = endFieldRef.current.value;
       const hash = `${travelMode}/${encodeURIComponent(
@@ -308,7 +312,23 @@ const App = () => {
 
   return (
     <div>
-      <Map />
+      <Map
+        onInit={(map) => {
+          pinpointMarker.setMap(map);
+          directionsRenderer.setMap(map);
+
+          const startAutocomplete = new google.maps.places.Autocomplete(
+            startFieldRef.current,
+          );
+          startAutocomplete.bindTo('bounds', map);
+          startAutocomplete.addListener('place_changed', handleSubmit);
+          const endAutocomplete = new google.maps.places.Autocomplete(
+            endFieldRef.current,
+          );
+          endAutocomplete.bindTo('bounds', map);
+          endAutocomplete.addListener('place_changed', handleSubmit);
+        }}
+      />
       <div id="sidebar">
         <header>
           <h1>
@@ -381,30 +401,17 @@ const App = () => {
               ></Icon>
               <span>
                 <label>
-                  Distance&nbsp;
+                  Units&nbsp;
                   <select
-                    value={distanceUnit}
+                    value={unitSystem}
                     onChange={(e) => {
-                      localStorage['steepless:distanceUnit'] = e.target.value;
-                      setDistanceUnit(e.target.value);
+                      const { value } = e.target;
+                      localStorage['steepless:unitSystem'] = value;
+                      setUnitSystem(value);
                     }}
                   >
-                    <option value="km">km</option>
-                    <option value="miles">miles</option>
-                  </select>
-                </label>
-                &nbsp;
-                <label>
-                  Height&nbsp;
-                  <select
-                    value={heightUnit}
-                    onChange={(e) => {
-                      localStorage['steepless:heightUnit'] = e.target.value;
-                      setHeightUnit(e.target.value);
-                    }}
-                  >
-                    <option value="m">m</option>
-                    <option value="ft">ft</option>
+                    <option value="metric">Metric (km, m)</option>
+                    <option value="imperial">Imperial (miles, ft)</option>
                   </select>
                 </label>
               </span>
@@ -420,8 +427,7 @@ const App = () => {
                   <Route
                     route={route}
                     travelMode={travelMode}
-                    heightUnit={heightUnit}
-                    distanceUnit={distanceUnit}
+                    unitSystem={unitSystem}
                     longestDistance={longestDistance}
                     selected={i === selectedRouteIndex}
                     onClick={() => {
