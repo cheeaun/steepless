@@ -50,8 +50,9 @@ const Map = () => {
     const map = new google.maps.Map(mapRef.current, {
       center: new google.maps.LatLng(37.7577, -122.4376),
       zoom: 12,
-      disableDefaultUI: true,
       mapId: '4e570dd5e962cb58',
+      disableDefaultUI: true,
+      zoomControl: true,
     });
 
     pinpointMarker.setMap(map);
