@@ -215,7 +215,12 @@ const Route = ({
     routePath.forEach((point) =>
       bounds.extend({ lat: point[1], lng: point[0] }),
     );
-    overlayRef.current._map.fitBounds(bounds, 100);
+    overlayRef.current._map.fitBounds(bounds, {
+      top: 60,
+      right: 70,
+      bottom: 30,
+      left: 20,
+    });
 
     const elevatedRoute = [];
     const elevationPolls = [];
