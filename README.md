@@ -1,10 +1,16 @@
-Steepless
-=========
+# Steepless
 
-Steepless is an app to find the flattest routes and avoid the hilliest routes.
+**Steepless** is a web app to find the flattest routes and avoid the hilliest routes.
 
-Story
------
+## Screenshots
+
+![](screenshots/steepless-screenshot-1.png)
+
+![](screenshots/steepless-screenshot-2.png)
+
+## Story time
+
+### September 2014
 
 I visited and stayed in San Francisco for 4 months, and the very first thing I realised that I need is a tool to navigate around the steep hills there. I wanted to build an app for that. I came back to Singapore and finally find the time to build it. And I call it Steepless.
 
@@ -20,22 +26,27 @@ While building Steepless, I've done a bunch of research and found there are simi
 
 Steepless is yet another attempt.
 
-Design
-------
+### January 2022
 
-The design is initially inspired by a [Google Maps demo for elevation in San Francisco](https://embed-dot-more-than-a-map.appspot.com/demos/routing/elevation). The rest of the UI is partially inspired by Google's [Material Design](https://www.google.com/design/spec/material-design/introduction.html).
+It was [my first attempt](https://twitter.com/cheeaun/status/509358952258093056) at building a React.JS app.
+
+[3 years later](https://twitter.com/cheeaun/status/889828805207916545), Google "copied" it, which is apparently [a killer new feature](https://mashable.com/article/google-maps-elevation).
+
+8 years later, I decided to [revive this project](https://twitter.com/cheeaun/status/1481602832231206922).
+
+## Design
+
+The design is initially inspired by a [Google Maps demo for elevation in San Francisco](https://embed-dot-more-than-a-map.appspot.com/demos/routing/elevation) (*link borked*, I couldn't find another or updated link). The rest of the UI is partially inspired by Google's [Material Design](https://material.io/).
 
 The SVG icon sprite is generated with [Fontastic](http://fontastic.me/).
 
-Development
------------
+## Development
 
-Requires [Node.js](http://nodejs.org/) and [gulp.js](http://gulpjs.com/).
+Requires [Node.js](http://nodejs.org/).
 
 - `npm install` to install the dependencies.
-- `gulp` to start the server at `localhost:8000`.
+- `npm start` to start the server.
 
-License
--------
+## License
 
 [MIT](http://cheeaun.mit-license.org/)
