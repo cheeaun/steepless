@@ -211,15 +211,11 @@ const Route = ({
       point.lat(),
     ]);
 
-    const bounds = new google.maps.LatLngBounds();
-    routePath.forEach((point) =>
-      bounds.extend({ lat: point[1], lng: point[0] }),
-    );
-    overlayRef.current._map.fitBounds(bounds, {
+    overlayRef.current._map.fitBounds(route.bounds, {
       top: 60,
       right: 70,
       bottom: 30,
-      left: 20,
+      left: 50,
     });
 
     const elevatedRoute = [];
