@@ -314,3 +314,24 @@ header h1 {
     margin-top: 0;
   }
 }
+
+.control-3d {
+  user-select: none;
+  box-shadow: rgb(0 0 0 / 30%) 0px 1px 4px -1px;
+  border-radius: 2px;
+  cursor: pointer;
+  background-color: rgb(255, 255, 255);
+  width: 40px;
+  height: 40px;
+  border: 0;
+  overflow: hidden;
+  appearance: none;
+  margin-right: 10px;
+  font-size: 20px;
+  font-weight: bold;
+  color: #656665;
+}
+
+.control-3d:hover {
+  color: #000;
+}

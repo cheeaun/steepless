@@ -6,10 +6,13 @@
   "license": "MIT",
   "scripts": {
     "serve": "serve . -l 8000",
-    "js": "esbuild assets/steepless.jsx --bundle --outfile=assets/steepless.js --target=es2016 --legal-comments=none --sourcemap --minify --watch",
+    "js": "esbuild assets/steepless.jsx --bundle --outfile=assets/steepless.js --target=es2018 --legal-comments=none --sourcemap --minify --watch",
     "start": "concurrently \"npm run js\" \"npm run serve\""
   },
   "dependencies": {
+    "@deck.gl/core": "~8.6.5",
+    "@deck.gl/google-maps": "~8.6.5",
+    "@deck.gl/layers": "~8.6.5",
     "react": "~17.0.2",
     "react-dom": "~17.0.2"
   },

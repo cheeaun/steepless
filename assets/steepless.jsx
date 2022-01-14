@@ -6,6 +6,8 @@ import React, {
   useMemo,
 } from 'react';
 import ReactDOM from 'react-dom';
+import { GoogleMapsOverlay } from '@deck.gl/google-maps';
+import { PathLayer } from '@deck.gl/layers';
 
 const directionsService = new google.maps.DirectionsService();
 const directionsRenderer = new google.maps.DirectionsRenderer({
@@ -51,6 +53,19 @@ const hidePinpointMarker = () => {
   pinpointMarker.setVisible(false);
 };
 
+const aMarker = new google.maps.Marker({
+  visible: false,
+  label: 'A',
+  clickable: false,
+  zIndex: 500,
+});
+const bMarker = new google.maps.Marker({
+  visible: false,
+  label: 'B',
+  clickable: false,
+  zIndex: 500,
+});
+
 const Icon = ({ type, ...props }) => (
   <svg className="icon" {...props}>
     <use xlinkHref={`assets/icons.svg#icon-${type}`} />
@@ -78,6 +93,32 @@ const Map = ({ onInit = () => {} }) => {
   return <div ref={mapRef} id="map-canvas" />;
 };
 
+const ThreeDControl = (controlDiv, map) => {
+  let mode3D = false;
+  const controlUI = document.createElement('button');
+  controlUI.className = 'control-3d';
+  controlUI.innerHTML = '3D';
+  controlDiv.appendChild(controlUI);
+  map.addListener('bounds_changed', () => {
+    const initialTilt = map.getTilt();
+    const initialHeading = map.getHeading();
+    if (initialTilt <= 10 && initialHeading <= 10) {
+      mode3D = false;
+      controlUI.innerHTML = '3D';
+    } else {
+      mode3D = true;
+      controlUI.innerHTML = '2D';
+    }
+  });
+  controlUI.addEventListener('click', () => {
+    mode3D = !mode3D;
+    const initialZoom = map.getZoom();
+    map.setTilt(mode3D ? 45 : 0);
+    map.setHeading(mode3D ? -45 : 0);
+    map.setZoom(mode3D ? initialZoom + 1 : initialZoom - 1);
+  });
+};
+
 const Chart = ({
   width,
   height,
@@ -85,6 +126,7 @@ const Chart = ({
   domain,
   onBarMouseEnter = () => {},
   onBarMouseLeave = () => {},
+  onBarClick = () => {},
 }) => (
   <div
     className="chart"
@@ -105,6 +147,9 @@ const Chart = ({
         onMouseLeave={() => {
           onBarMouseLeave();
         }}
+        onClick={() => {
+          onBarClick(i);
+        }}
       >
         <span>{d.title}</span>
       </div>
@@ -115,9 +160,11 @@ const Chart = ({
 const Route = ({
   route,
   selected,
+  renderingType,
   travelMode,
   longestDistance,
   unitSystem,
+  overlayRef,
   onClick = () => {},
 }) => {
   const [elevations, setElevations] = useState([]);
@@ -143,6 +190,90 @@ const Route = ({
       },
     );
   }, [route]);
+
+  useEffect(() => {
+    if (renderingType !== google.maps.RenderingType.VECTOR) return;
+    if (!selected) return;
+
+    aMarker.setPosition(route.overview_path[0]);
+    aMarker.setVisible(true);
+    bMarker.setPosition(route.overview_path[route.overview_path.length - 1]);
+    bMarker.setVisible(true);
+  }, [route, selected, renderingType]);
+
+  useEffect(() => {
+    if (renderingType !== google.maps.RenderingType.VECTOR) return;
+    if (!elevations.length) return;
+    if (!selected) return;
+
+    const routePath = route.overview_path.map((point) => [
+      point.lng(),
+      point.lat(),
+    ]);
+
+    const bounds = new google.maps.LatLngBounds();
+    routePath.forEach((point) =>
+      bounds.extend({ lat: point[1], lng: point[0] }),
+    );
+    overlayRef.current._map.fitBounds(bounds, 100);
+
+    const elevatedRoute = [];
+    const elevationPolls = [];
+    elevations.forEach((el) => {
+      const { location, elevation } = el;
+      const lng = location.lng();
+      const lat = location.lat();
+      elevatedRoute.push([lng, lat, elevation]);
+      elevationPolls.push({
+        path: [
+          [lng, lat, 0],
+          [lng, lat, elevation],
+        ],
+      });
+    });
+
+    console.log({
+      overlay: overlayRef.current,
+      routePath,
+      elevatedRoute,
+      elevationPolls,
+    });
+    overlayRef.current.setProps({
+      layers: [
+        new PathLayer({
+          id: 'route',
+          data: [
+            {
+              path: routePath,
+            },
+          ],
+          widthUnits: 'pixels',
+          widthScale: 3,
+          capRounded: true,
+          jointRounded: true,
+          getColor: [37, 155, 36],
+        }),
+        new PathLayer({
+          id: `elevated-route-${route.summary}`,
+          data: [
+            {
+              path: elevatedRoute,
+            },
+            ...elevationPolls,
+          ],
+          widthUnits: 'pixels',
+          widthScale: 1,
+          capRounded: true,
+          jointRounded: true,
+          getColor: [37, 155, 36, 150],
+          billboard: true,
+          updateTriggers: {
+            data: elevations,
+          },
+        }),
+      ],
+    });
+  }, [route, selected, elevations, renderingType]);
 
   const leg = route.legs[0];
   const distanceVal = leg.distance.value;
@@ -174,7 +305,7 @@ const Route = ({
   });
 
   const domain = [0, highestElevation];
-  const height = Math.round((highestElevation - lowestElevation) / 2);
+  const height = Math.round((highestElevation - lowestElevation) * 0.25);
 
   const riseStat = !!rise && (
     <span>
@@ -231,6 +362,15 @@ const Route = ({
         height={height}
         onBarMouseEnter={handleBarHover}
         onBarMouseLeave={handleBarHover}
+        onBarClick={(i) => {
+          const { location } = elevations[i];
+          const map = overlayRef.current._map;
+          map.panTo(location);
+          const initialZoom = map.getZoom();
+          if (initialZoom < 17) {
+            map.setZoom(17);
+          }
+        }}
       />
       <div className="stats">
         {riseStat}&nbsp;&nbsp;&nbsp;{dropStat}
@@ -256,8 +396,12 @@ const App = () => {
   const [selectedRouteIndex, setSelectedRouteIndex] = useState(0);
   const [error, setError] = useState(null);
 
+  // https://developers.google.com/maps/documentation/javascript/reference/map#RenderingType
+  const [renderingType, setRenderingType] = useState(null); // RASTER | VECTOR
+
   const startFieldRef = useRef();
   const endFieldRef = useRef();
+  const overlayRef = useRef();
 
   useEffect(() => {
     const hashChange = () => {
@@ -324,7 +468,6 @@ const App = () => {
       <Map
         onInit={(map) => {
           pinpointMarker.setMap(map);
-          directionsRenderer.setMap(map);
 
           const startAutocomplete = new google.maps.places.Autocomplete(
             startFieldRef.current,
@@ -336,6 +479,33 @@ const App = () => {
           );
           endAutocomplete.bindTo('bounds', map);
           endAutocomplete.addListener('place_changed', handleSubmit);
+
+          map.addListener('renderingtype_changed', (e) => {
+            const rendering = map.getRenderingType();
+            setRenderingType(rendering);
+            if (rendering === google.maps.RenderingType.VECTOR) {
+              directionsRenderer.setMap(null);
+              aMarker.setMap(map);
+              bMarker.setMap(map);
+
+              const controlDiv = document.createElement('div');
+              ThreeDControl(controlDiv, map);
+              map.controls[google.maps.ControlPosition.RIGHT_BOTTOM].push(
+                controlDiv,
+              );
+
+              const overlay = (overlayRef.current = new GoogleMapsOverlay({
+                // Mobile-optimized props
+                _pickable: false,
+                _typedArrayManagerProps: { overAlloc: 1, poolSize: 0 },
+              }));
+              overlay.setMap(map);
+            } else {
+              directionsRenderer.setMap(map);
+              aMarker.setMap(null);
+              bMarker.setMap(null);
+            }
+          });
         }}
       />
       <div id="sidebar">
@@ -435,6 +605,7 @@ const App = () => {
                 <li key={`${i}${route.summary}`}>
                   <Route
                     route={route}
+                    renderingType={renderingType}
                     travelMode={travelMode}
                     unitSystem={unitSystem}
                     longestDistance={longestDistance}
@@ -443,6 +614,7 @@ const App = () => {
                       setSelectedRouteIndex(i);
                       directionsRenderer.setRouteIndex(i);
                     }}
+                    overlayRef={overlayRef}
                   />
                 </li>
               ))}
