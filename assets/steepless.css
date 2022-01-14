@@ -326,10 +326,11 @@ header h1 {
   border: 0;
   overflow: hidden;
   appearance: none;
-  margin-right: 10px;
+  margin: 0 10px 0 0;
   font-size: 20px;
   font-weight: bold;
   color: #656665;
+  padding: 0;
 }
 
 .control-3d:hover {
