@@ -10,15 +10,15 @@
     "start": "concurrently \"npm run js\" \"npm run serve\""
   },
   "dependencies": {
-    "@deck.gl/core": "~8.6.5",
-    "@deck.gl/google-maps": "~8.6.5",
-    "@deck.gl/layers": "~8.6.5",
-    "react": "~17.0.2",
-    "react-dom": "~17.0.2"
+    "@deck.gl/core": "~8.7.9",
+    "@deck.gl/google-maps": "~8.7.9",
+    "@deck.gl/layers": "~8.7.9",
+    "react": "~18.1.0",
+    "react-dom": "~18.1.0"
   },
   "devDependencies": {
-    "concurrently": "~7.0.0",
-    "esbuild": "~0.14.10",
+    "concurrently": "~7.2.0",
+    "esbuild": "~0.14.39",
     "serve": "~13.0.2"
   }
 }
